@@ -25,13 +25,23 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+**Game purpose:**
+This is a number guessing game built with Streamlit. The player picks a difficulty level, then tries to guess a randomly generated secret number within a limited number of attempts. After each guess, the game gives a hint telling the player whether to guess higher or lower.
+
+**Bugs found:**
+1. **Reversed hint directions** — when a player guessed a number higher than the secret, the game told them to go higher instead of lower. The comparison logic was correct (`guess > secret`) but the feedback messages were swapped.
+2. **Decimal inputs silently accepted** — entering a value like `12.7` would not trigger any error. The original code used `int(float(raw))` which quietly truncated the decimal and treated it as a valid integer guess.
+
+**Fixes applied:**
+1. Moved `check_guess` and `parse_guess` into `logic_utils.py` and corrected the hint messages so "Too High" maps to "Try LOWER!" and "Too Low" maps to "Try HIGHER!".
+2. Updated `parse_guess` in `logic_utils.py` to use `int(raw)` directly, which raises a `ValueError` on any decimal string, and returns a user-facing error message instead of silently accepting the input.
+3. Updated `app.py` to import all game logic from `logic_utils.py` instead of using its own local copies.
+4. Added `conftest.py` at the project root so pytest can locate `logic_utils` when running tests from the `tests/` folder.
 
 ## 📸 Demo
 
 - [ ] [Insert a screenshot of your fixed, winning game here]
+- [ ] [Insert a screenshot of your pytest results showing all 5 tests passing]
 
 ## 🚀 Stretch Features
 
